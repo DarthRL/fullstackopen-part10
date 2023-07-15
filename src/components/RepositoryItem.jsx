@@ -64,14 +64,14 @@ const RepositoryItem = ({ item }) => {
           <Text style={styles.text}>{item.description}</Text>
           <View style={{ paddingLeft: 2, paddingTop: 5 }}>
             <Text
-              style={[
-                {
-                  color: 'white',
-                  backgroundColor: theme.colors.primary,
-                  borderRadius: 3,
-                  padding: 3,
-                },
-              ]}
+              style={{
+                color: 'white',
+                backgroundColor: theme.colors.primary,
+                borderRadius: 3,
+                paddingTop: 2,
+                paddingHorizontal: 5,
+                paddingBottom: 4,
+              }}
             >
               {item.language}
             </Text>
