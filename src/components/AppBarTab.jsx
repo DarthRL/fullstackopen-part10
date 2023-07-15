@@ -16,7 +16,7 @@ const AppBarTab = ({ text, to }) => {
   return (
     <Pressable>
       <Link to={to} ><Text style={styles.appBarText}>{text}</Text></Link>
-    </Pressable>
+    </Pressable> 
   )
 }
 
