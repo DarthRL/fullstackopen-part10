@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
 const ItemSeparator = () => <View style={styles.separator} />
 
 const ReviewItem = ({ review }) => {
-  console.log(review)
   return (
     <View style={styles.reviewItemContainer}>
       <View style={styles.rating}>
@@ -75,11 +74,9 @@ const SingleRepository = () => {
   const id = useParams().id
   const { repository } = useRepository(id)
   if (!repository) return null
-  console.log(repository.reviews)
   const reviews = repository.reviews
     ? repository.reviews.edges.map(edge => edge.node)
     : []
-  console.log(reviews)
 
   return (
     <FlatList

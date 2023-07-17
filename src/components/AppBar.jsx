@@ -25,6 +25,8 @@ const AppBar = () => {
     <View style={styles.container}>
       <ScrollView horizontal style={styles.scrollView}>
         <AppBarTab text={'Repositories'} to={'/'} />
+        {me.data && me.data.me && 
+          <AppBarTab text={'Create Review'} to={'/create_review'} />}
         {me.data && me.data.me ? (
           <AppBarTab
             text={'Sign out'}
