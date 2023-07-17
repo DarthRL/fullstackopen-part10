@@ -1,6 +1,7 @@
-import { Image, StyleSheet, View } from 'react-native'
+import { Image, Pressable, StyleSheet, View } from 'react-native'
 import Text from './Text'
 import theme from '../theme'
+import * as Linking from 'expo-linking'
 
 const styles = StyleSheet.create({
   flexColumnItemContainer: {
@@ -42,9 +43,22 @@ const styles = StyleSheet.create({
     margin: 12,
     marginBottom: 0,
   },
+  button: {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: theme.colors.primary,
+    justifyContent: 'center',
+    borderRadius: 3,
+    padding: 15,
+    margin: 12,
+    marginTop: 0,
+  },
+  buttonText: {
+    color: 'white',
+  },
 })
 
-const RepositoryItem = ({ item }) => {
+const RepositoryItem = ({ item, isSinglePage }) => {
   return (
     <View
       testID='repositoryItem'
@@ -105,6 +119,16 @@ const RepositoryItem = ({ item }) => {
           <Text style={styles.text}>Rating</Text>
         </View>
       </View>
+      {isSinglePage && (
+        <Pressable
+          onPress={() => Linking.openURL(item.url)}
+          style={styles.button}
+        >
+          <Text fontWeight='bold' style={styles.buttonText}>
+            Open in Github
+          </Text>
+        </Pressable>
+      )}
     </View>
   )
 }
