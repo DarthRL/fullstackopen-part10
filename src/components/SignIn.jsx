@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: theme.colors.textSecondary,
     borderWidth: 1,
-    placeholderTextColor: theme.colors.mainBackground,
     height: 45,
     margin: 7,
     padding: 14,
@@ -54,11 +53,13 @@ const SignInForm = ({ onSubmit }) => {
       <FormikTextInput
         name='username'
         placeholder='Username'
+        placeholderTextColor={theme.colors.mainBackground}
         style={styles.input}
       />
       <FormikTextInput
         name='password'
         placeholder='Password'
+        placeholderTextColor={theme.colors.mainBackground}
         secureTextEntry
         style={styles.input}
       />
@@ -68,6 +69,18 @@ const SignInForm = ({ onSubmit }) => {
         </Text>
       </Pressable>
     </View>
+  )
+}
+
+export const SignInContainer = ({ onSubmit }) => {
+  return (
+    <Formik
+      initialValues={initialValues}
+      onSubmit={onSubmit}
+      validationSchema={validationSchema}
+    >
+      {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
+    </Formik>
   )
 }
 
@@ -86,14 +99,6 @@ const SignIn = () => {
     }
   }
 
-  return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      validationSchema={validationSchema}
-    >
-      {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
-    </Formik>
-  )
+  return <SignInContainer onSubmit={onSubmit} />
 }
 export default SignIn
