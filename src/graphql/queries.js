@@ -64,6 +64,36 @@ export const AUTHENTICATE = gql`
     }
   }
 `
+export const CREATE_USER = gql`
+  mutation ($username: String!, $password: String!) {
+    createUser(user: { username: $username, password: $password }) {
+      createdAt
+      id
+      reviewCount
+      reviews {
+        edges {
+          node {
+            id
+            createdAt
+            rating
+            repository {
+              id
+              fullName
+            }
+            repositoryId
+            text
+            user {
+              id
+              username
+            }
+            userId
+          }
+        }
+      }
+      username
+    }
+  }
+`
 
 export const CREATE_REVIEW = gql`
   mutation (

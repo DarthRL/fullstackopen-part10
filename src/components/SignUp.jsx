@@ -4,25 +4,31 @@ import Text from './Text'
 import FormikTextInput from './FormikTesxtInput'
 import theme from '../theme'
 import * as yup from 'yup'
+import useSignIn from '../hooks/useSignIn'
 import { useNavigate } from 'react-router-native'
-import useCreateReview from '../hooks/useCreateReview'
+import useSignUp from '../hooks/useSignUp'
 
 const initialValues = {
-  ownerName: '',
-  repositoryName: '',
-  rating: '',
-  text: '',
+  username: '',
+  password: '',
+  passwordConfirmation: '',
 }
 
 const validationSchema = yup.object().shape({
-  ownerName: yup.string().required('Repository owner name is required'),
-  repositoryName: yup.string().required('Repository name is required'),
-  rating: yup
-    .number()
-    .integer()
-    .required('Rating is required')
-    .min(0, 'Rating must be between 0 and 100')
-    .max(100, 'Rating must be between 0 and 100'),
+  username: yup
+    .string()
+    .required('Username is required')
+    .min(5, 'Username must be between 5-30 characters')
+    .max(30, 'Username must be between 5-30 characters'),
+  password: yup
+    .string()
+    .required('Password is required')
+    .min(5, 'Password must be between 5-30 characters')
+    .max(30, 'Password must be between 5-30 characters'),
+  passwordConfirmation: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Passwords do not match')
+    .required('Password confirmation is required'),
 })
 
 const styles = StyleSheet.create({
@@ -55,74 +61,67 @@ const styles = StyleSheet.create({
   },
 })
 
-const CreateReviewForm = ({ onSubmit }) => {
+const SignUpForm = ({ onSubmit }) => {
   return (
     <View style={styles.container}>
       <FormikTextInput
-        name='ownerName'
-        placeholder='Repository Owner Name'
+        name='username'
+        placeholder='Username'
         placeholderTextColor={theme.colors.mainBackground}
         style={styles.input}
       />
       <FormikTextInput
-        name='repositoryName'
-        placeholder='Repository name'
+        name='password'
+        placeholder='Password'
         placeholderTextColor={theme.colors.mainBackground}
+        secureTextEntry
         style={styles.input}
       />
       <FormikTextInput
-        name='rating'
-        placeholder='Rating'
+        name='passwordConfirmation'
+        placeholder='Password confirmation'
         placeholderTextColor={theme.colors.mainBackground}
-        style={styles.input}
-      />
-      <FormikTextInput
-        name='text'
-        placeholder='Review'
-        placeholderTextColor={theme.colors.mainBackground}
+        secureTextEntry
         style={styles.input}
       />
       <Pressable onPress={onSubmit} style={styles.button}>
         <Text fontWeight='bold' style={styles.buttonText}>
-          Create review
+          Sign up
         </Text>
       </Pressable>
     </View>
   )
 }
 
-export const CreateReviewContainer = ({ onSubmit }) => {
+export const SignUpContainer = ({ onSubmit }) => {
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {({ handleSubmit }) => <CreateReviewForm onSubmit={handleSubmit} />}
+      {({ handleSubmit }) => <SignUpForm onSubmit={handleSubmit} />}
     </Formik>
   )
 }
 
-const CreateReview = () => {
-  const [CreateReview] = useCreateReview()
+const SignUp = () => {
+  const [signIn] = useSignIn()
+  const [signUp] = useSignUp()
   const navigate = useNavigate()
 
   const onSubmit = async values => {
-    const { ownerName, repositoryName, rating, text } = values
+    const { username, password } = values
 
     try {
-      const data = await CreateReview({
-        ownerName,
-        repositoryName,
-        rating: parseInt(rating),
-        text,
-      })
-      navigate(`/repositories/${data.createReview.repositoryId}`)
+      await signUp({ username, password })
+      await signIn({ username, password })
+      navigate('/')
     } catch (e) {
       console.log(e)
     }
   }
 
-  return <CreateReviewContainer onSubmit={onSubmit} />
+  return <SignUpContainer onSubmit={onSubmit} />
 }
-export default CreateReview
+export default SignUp

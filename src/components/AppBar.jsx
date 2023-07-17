@@ -25,9 +25,10 @@ const AppBar = () => {
     <View style={styles.container}>
       <ScrollView horizontal style={styles.scrollView}>
         <AppBarTab text={'Repositories'} to={'/'} />
-        {me.data && me.data.me && 
-          <AppBarTab text={'Create Review'} to={'/create_review'} />}
-        {me.data && me.data.me ? (
+        {me.data && me.data.me && (
+          <AppBarTab text={'Create Review'} to={'/create_review'} />
+        )}
+        {me.data && me.data.me && (
           <AppBarTab
             text={'Sign out'}
             to={'/'}
@@ -35,8 +36,12 @@ const AppBar = () => {
               await signOut()
             }}
           />
-        ) : (
+        )}
+        {(!me.data || !me.data.me) && (
           <AppBarTab text={'Sign in'} to={'/signin'} />
+        )}
+        {(!me.data || !me.data.me) && (
+          <AppBarTab text={'Sign up'} to={'/signup'} />
         )}
       </ScrollView>
     </View>
