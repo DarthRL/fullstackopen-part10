@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
 const RepositoryItem = ({ item }) => {
   return (
     <View
+      testID='repositoryItem'
       key={item.id}
       style={[styles.flexColumnItemContainer, { backgroundColor: 'white' }]}
     >
