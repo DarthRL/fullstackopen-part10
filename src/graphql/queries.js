@@ -1,8 +1,16 @@
 import { gql } from '@apollo/client'
 
 export const GET_REPOSITORIES = gql`
-  query ($orderBy: AllRepositoriesOrderBy, $orderDirection: OrderDirection, $searchKeyword: String) {
-    repositories(orderBy: $orderBy, orderDirection: $orderDirection, searchKeyword: $searchKeyword) {
+  query (
+    $orderBy: AllRepositoriesOrderBy
+    $orderDirection: OrderDirection
+    $searchKeyword: String
+  ) {
+    repositories(
+      orderBy: $orderBy
+      orderDirection: $orderDirection
+      searchKeyword: $searchKeyword
+    ) {
       edges {
         node {
           id
@@ -63,10 +71,17 @@ export const ME = gql`
             user {
               username
             }
+            repositoryId
           }
         }
       }
     }
+  }
+`
+
+export const DELETE_REVIEW = gql`
+  mutation ($id: ID!) {
+    deleteReview(id: $id)
   }
 `
 
