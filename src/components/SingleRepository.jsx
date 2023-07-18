@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
   reviewRightColumn: {
     display: 'flex',
     flexDirection: 'column',
-    paddingLeft:13,
-    flexShrink: 1
+    paddingLeft: 13,
+    flexShrink: 1,
   },
   rating: {
     display: 'flex',
@@ -44,11 +44,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   createdAt: {
-    color:theme.colors.textSecondary
+    color: theme.colors.textSecondary,
   },
   reviewText: {
     marginVertical: 3,
-  }
+  },
 })
 
 const ItemSeparator = () => <View style={styles.separator} />
@@ -72,11 +72,18 @@ const ReviewItem = ({ review }) => {
 
 const SingleRepository = () => {
   const id = useParams().id
-  const { repository } = useRepository(id)
+  const { repository, fetchMore } = useRepository({
+    repositoryId: id,
+    first: 4,
+  })
   if (!repository) return null
   const reviews = repository.reviews
     ? repository.reviews.edges.map(edge => edge.node)
     : []
+
+  const onEndReach = async() => {
+    await fetchMore()
+  }
 
   return (
     <FlatList
@@ -85,6 +92,8 @@ const SingleRepository = () => {
       keyExtractor={({ id }) => id}
       ItemSeparatorComponent={ItemSeparator}
       ListHeaderComponent={() => <RepositoryInfo repository={repository} />}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0}
     ></FlatList>
   )
 }
