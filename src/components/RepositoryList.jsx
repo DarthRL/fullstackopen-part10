@@ -23,8 +23,8 @@ const OrderPicker = ({ refetch }) => {
   return (
     <Picker
       selectedValue={selectedOrder}
-      onValueChange={async itemValue => {
-        await refetch(variables[itemValue])
+      onValueChange={itemValue => {
+        refetch(variables[itemValue])
         setSelectedOrder(itemValue)
       }}
     >
