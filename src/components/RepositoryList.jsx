@@ -3,7 +3,9 @@ import RepositoryItem from './RepositoryItem'
 import useRepositories from '../hooks/useRepositories'
 import { useNavigate } from 'react-router-native'
 import { Picker } from '@react-native-picker/picker'
-import { useState } from 'react'
+import { Searchbar } from 'react-native-paper'
+import { useState, useEffect } from 'react'
+import { useDebounce } from 'use-debounce'
 
 const styles = StyleSheet.create({
   separator: {
@@ -13,34 +15,53 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />
 
-const OrderPicker = ({ refetch }) => {
+const RepositoryListHeader = ({ refetch }) => {
   const [selectedOrder, setSelectedOrder] = useState()
-  const variables = {
-    'Latest repositories':{ orderBy: 'CREATED_AT' },
-    'Highest rated repositories':{ orderBy: 'RATING_AVERAGE', orderDirection: 'DESC' },
-    'Lowest rated repositories':{ orderBy: 'RATING_AVERAGE', orderDirection: 'ASC' },
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQueryValue] = useDebounce(searchQuery, 500)
+  useEffect(() => {
+    refetch({
+      searchKeyword: searchQuery,
+      ...orders[selectedOrder],
+    })
+  }, [selectedOrder, searchQueryValue])
+  const orders = {
+    'Latest repositories': { orderBy: 'CREATED_AT' },
+    'Highest rated repositories': {
+      orderBy: 'RATING_AVERAGE',
+      orderDirection: 'DESC',
+    },
+    'Lowest rated repositories': {
+      orderBy: 'RATING_AVERAGE',
+      orderDirection: 'ASC',
+    },
   }
   return (
-    <Picker
-      selectedValue={selectedOrder}
-      onValueChange={itemValue => {
-        refetch(variables[itemValue])
-        setSelectedOrder(itemValue)
-      }}
-    >
-      <Picker.Item
-        label='Latest repositories'
-        value='Latest repositories'
+    <>
+      <Searchbar
+        placeholder='Search'
+        onChangeText={query => {
+          setSearchQuery(query)
+        }}
+        value={searchQuery}
       />
-      <Picker.Item
-        label='Highest rated repositories'
-        value='Highest rated repositories'
-      />
-      <Picker.Item
-        label='Lowest rated repositories'
-        value='Lowest rated repositories'
-      />
-    </Picker>
+      <Picker
+        selectedValue={selectedOrder}
+        onValueChange={itemValue => {
+          setSelectedOrder(itemValue)
+        }}
+      >
+        <Picker.Item label='Latest repositories' value='Latest repositories' />
+        <Picker.Item
+          label='Highest rated repositories'
+          value='Highest rated repositories'
+        />
+        <Picker.Item
+          label='Lowest rated repositories'
+          value='Lowest rated repositories'
+        />
+      </Picker>
+    </>
   )
 }
 
@@ -53,7 +74,7 @@ export const RepositoryListContainer = ({ repositories, refetch }) => {
   return (
     <FlatList
       data={repositoryNodes}
-      ListHeaderComponent={<OrderPicker refetch={refetch} />}
+      ListHeaderComponent={<RepositoryListHeader refetch={refetch} />}
       ItemSeparatorComponent={ItemSeparator}
       keyExtractor={({ id }) => id}
       renderItem={({ item }) => (
