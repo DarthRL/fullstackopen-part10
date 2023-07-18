@@ -29,6 +29,9 @@ const AppBar = () => {
           <AppBarTab text={'Create Review'} to={'/create_review'} />
         )}
         {me.data && me.data.me && (
+          <AppBarTab text={'My Reviews'} to={'/my_reviews'} />
+        )}
+        {me.data && me.data.me && (
           <AppBarTab
             text={'Sign out'}
             to={'/'}
